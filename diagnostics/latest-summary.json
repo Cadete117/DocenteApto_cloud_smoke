@@ -1,0 +1,22 @@
+{
+  "url": "https://class.utp.edu.pe",
+  "ok": false,
+  "error": {
+    "type": "RuntimeError",
+    "message": "La pagina cargo sin texto visible ni inputs.",
+    "traceback": "Traceback (most recent call last):\n  File \"/home/runner/work/DocenteApto_cloud_smoke/DocenteApto_cloud_smoke/scripts/smoke_utp.py\", line 106, in main\n    raise RuntimeError(\"La pagina cargo sin texto visible ni inputs.\")\nRuntimeError: La pagina cargo sin texto visible ni inputs.\n"
+  },
+  "checks": [
+    {
+      "title": "UTP+class",
+      "status": 200,
+      "final_url": "https://class.utp.edu.pe/",
+      "visible_text_len": 0,
+      "input_count": 0,
+      "html_len": 6669,
+      "visible_text_sample": ""
+    }
+  ],
+  "trace_error": "Event loop is closed! Is Playwright already stopped?",
+  "browser_close_error": "Event loop is closed! Is Playwright already stopped?"
+}
