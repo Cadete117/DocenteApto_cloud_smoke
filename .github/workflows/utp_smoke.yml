@@ -39,6 +39,17 @@ jobs:
           ARTIFACTS_DIR: artifacts-smoke
         run: xvfb-run -a python scripts/smoke_utp.py
 
+      - name: Resumen diagnostico
+        if: always()
+        run: |
+          if [ -f artifacts-smoke/summary.json ]; then
+            echo "### UTP Cloud Smoke" >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts-smoke/summary.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            cat artifacts-smoke/summary.json
+          fi
+
       - name: Publicar diagnostico smoke
         if: always()
         uses: actions/upload-artifact@v4
