@@ -73,7 +73,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if git diff --quiet -- diagnostics; then
+          if [ -z "$(git status --porcelain diagnostics)" ]; then
             echo "Sin cambios de diagnostico"
             exit 0
           fi
