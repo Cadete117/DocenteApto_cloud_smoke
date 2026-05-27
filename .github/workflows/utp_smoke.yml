@@ -14,6 +14,9 @@ on:
 
 jobs:
   smoke:
+    permissions:
+      contents: write
+
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -49,6 +52,35 @@ jobs:
             echo '```' >> "$GITHUB_STEP_SUMMARY"
             cat artifacts-smoke/summary.json
           fi
+
+      - name: Publicar diagnostico en repositorio
+        if: always()
+        run: |
+          mkdir -p diagnostics
+
+          if [ -f artifacts-smoke/summary.json ]; then
+            cp artifacts-smoke/summary.json diagnostics/latest-summary.json
+          fi
+
+          if [ -f artifacts-smoke/inicio.html ]; then
+            cp artifacts-smoke/inicio.html diagnostics/latest-inicio.html
+          fi
+
+          if [ -f artifacts-smoke/inicio.png ]; then
+            cp artifacts-smoke/inicio.png diagnostics/latest-inicio.png
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- diagnostics; then
+            echo "Sin cambios de diagnostico"
+            exit 0
+          fi
+
+          git add diagnostics
+          git commit -m "Publicar diagnostico smoke"
+          git push origin main
 
       - name: Publicar diagnostico smoke
         if: always()
