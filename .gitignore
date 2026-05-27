@@ -1,0 +1,10 @@
+.env
+
+__pycache__/
+*.pyc
+
+output/*.csv
+reportes/*.csv
+artifacts/
+logs/
+artifacts-smoke/

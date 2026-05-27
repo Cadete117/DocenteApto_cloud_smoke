@@ -1,0 +1,49 @@
+name: UTP Cloud Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/utp_smoke.yml"
+      - ".github/workflows/utp_bot.yml"
+      - "bot/bot_utp.py"
+      - "requirements.txt"
+      - "scripts/smoke_utp.py"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chrome
+
+      - name: Probar carga inicial de UTP+CLASS
+        env:
+          UTP_URL: https://class.utp.edu.pe
+          PLAYWRIGHT_CHANNEL: chrome
+          ARTIFACTS_DIR: artifacts-smoke
+        run: xvfb-run -a python scripts/smoke_utp.py
+
+      - name: Publicar diagnostico smoke
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: utp-cloud-smoke-diagnostics
+          path: artifacts-smoke/
+          if-no-files-found: ignore
+          retention-days: 7
